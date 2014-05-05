@@ -19,7 +19,7 @@ test {
     exclude '**/*Abstract*.*'
 }
 
-task archive(type: Tar, dependsOn: assemble) {
+task dist(type: Tar, dependsOn: build) {
     archiveName "rmi-perf.tar"
     from '.'
     include 'build/libs/*.jar'

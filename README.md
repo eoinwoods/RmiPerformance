@@ -14,7 +14,7 @@ Basic Usage
 * The assumption is that you're running the code on a system with bash(1), tar(1) and a JDK installed
 * Build the code:
 
-        $ gradle archive
+        $ gradle dist
 
 * You'll find the file `rmi-perf.tar`  in the `build/distributions` directory.  This contains everything you need to run the tests.
 * Copy the .tar file anywhere you want to run the clients or servers.
