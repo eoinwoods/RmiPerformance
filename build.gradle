@@ -1,0 +1,29 @@
+// Minimal Java Gradle project
+// $> gradle build
+// will build the project into a JAR
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+test {
+    scanForTestClasses = false
+    // probably have to tweak the include and exclude patterns, depending on the naming scheme you use
+    include '**/*Test.*'
+    exclude '**/*Abstract*.*'
+}
+
+task archive(type: Tar, dependsOn: assemble) {
+    archiveName "rmi-perf.tar"
+    from '.'
+    include 'build/libs/*.jar'
+    include '*.sh'
+    include '*store'
+}
+
