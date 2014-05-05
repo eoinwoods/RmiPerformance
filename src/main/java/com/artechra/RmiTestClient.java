@@ -112,10 +112,12 @@ public class RmiTestClient {
     static void runTests(RmiTestClient client) {
         BigDecimal result = client.add(new BigDecimal(10.0), new BigDecimal(12.0)) ;
         assert result.equals(new BigDecimal(22.0)) ;
-        TimerGroup.Summary additionSummary = client.testAdditionPerformance(10000) ;
-        LOG.info("Result of 1000 addition calls: " + additionSummary) ;
+        int tests = 10000 ;
+        int characters = 500 ;
+        TimerGroup.Summary additionSummary = client.testAdditionPerformance(tests) ;
+        LOG.info(String.format("Result of %d addition calls: %s", tests, additionSummary)) ;
         TimerGroup.Summary concatenationSummary = client.testConcatenationPerformance(10000, 500) ;
-        LOG.info("Result of 1000 concatenation calls with 500 character strings: " + concatenationSummary) ;
+        LOG.info(String.format("Result of %d concatenation calls with %d character strings: %s", tests, characters, concatenationSummary)) ;
     }
 
     public static void main(String[] args) {
