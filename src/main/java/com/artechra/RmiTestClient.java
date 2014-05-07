@@ -121,13 +121,13 @@ public class RmiTestClient {
         int tests = 10000 ;
         int characters = 500 ;
         TimerGroup.Summary additionSummary = client.testAdditionPerformance(tests) ;
-        LOG.info(String.format("Result of %d addition calls: %s", tests, formatSummary((additionSummary)))) ;
+        LOG.info(String.format("Performance of %d addition calls: %s", tests, formatSummary((additionSummary)))) ;
         TimerGroup.Summary concatenationSummary = client.testConcatenationPerformance(10000, 500) ;
-        LOG.info(String.format("Result of %d concatenation calls with %d character strings: %s", tests, characters, formatSummary(concatenationSummary))) ;
+        LOG.info(String.format("Performance of %d concatenation calls with %d character strings: %s", tests, characters, formatSummary(concatenationSummary))) ;
     }
 
     static String formatSummary(TimerGroup.Summary summary) {
-        return String.format("Summary[total=%dms count=%d min=%dus max=%dus avg=%dus",
+        return String.format("total=%dms count=%d min=%dus max=%dus avg=%dus",
             summary.total / 1000 / 1000,
             summary.count,
             summary.min / 1000,
