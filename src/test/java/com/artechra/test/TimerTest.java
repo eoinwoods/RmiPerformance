@@ -19,16 +19,6 @@ public class TimerTest {
         assertEqualsWithinTolerance(100 * MILLI_TO_NANO, duration, 2 * MILLI_TO_NANO) ;
     }
 
-    @Test
-    public void testTimerReturnsCredibleMillisecondPeriodLength() throws InterruptedException {
-        Timer t = new Timer() ;
-        t.start();
-        Thread.sleep(100) ;
-        t.stop();
-        long duration = t.durationMillis();
-        assertEqualsWithinTolerance(100, duration, 2) ;
-    }
-
     @Test(expected = IllegalStateException.class)
     public void aNonStartedTimerMustGenerateAnErrorIfStopped() {
         Timer t = new Timer() ;
@@ -39,7 +29,14 @@ public class TimerTest {
     public void testingARunningTimerMustGenerateAnException() {
         Timer t = new Timer() ;
         t.start() ;
-        t.durationMillis() ;
+        t.durationNanos() ;
     }
 
+    @Test
+    public void factoryMustReturnAFunctionalRunningTimer() throws InterruptedException {
+        Timer t = Timer.newRunningTimer() ;
+        Thread.sleep(10);
+        t.stop() ;
+        assertEqualsWithinTolerance(10 * MILLI_TO_NANO, t.durationNanos(), 2 * MILLI_TO_NANO) ;
+    }
 }

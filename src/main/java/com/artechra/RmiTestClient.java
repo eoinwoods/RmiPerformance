@@ -1,5 +1,6 @@
 package com.artechra;
 
+import com.artechra.timing.Timer;
 import com.artechra.timing.TimerGroup;
 
 import java.math.BigDecimal;
@@ -14,14 +15,19 @@ public class RmiTestClient {
 
     private final static Logger LOG = Logger.getLogger(RmiTestClient.class.getName()) ;
 
+    private final static String SIMPLE_SERVICE_NAME = "SimpleService" ;
     private SimpleService calc;
     private final Random randomSource = new Random(System.currentTimeMillis() % 4);
 
 
     void init(String hostname, int port) throws RemoteException, NotBoundException {
+        Timer initTimer = new Timer() ;
+        initTimer.start();
         Registry registry = getRegistry(hostname, port) ;
-        Object stub = registry.lookup("SimpleService");
+        Object stub = registry.lookup(SIMPLE_SERVICE_NAME);
         this.calc = (SimpleService)stub ;
+        initTimer.stop();
+        LOG.info("Lookup of " + SIMPLE_SERVICE_NAME + " took " + initTimer.durationNanos() / 1000 / 1000 + "msec") ;
     }
 
     Registry getRegistry(String host, int port) throws RemoteException {
@@ -115,9 +121,19 @@ public class RmiTestClient {
         int tests = 10000 ;
         int characters = 500 ;
         TimerGroup.Summary additionSummary = client.testAdditionPerformance(tests) ;
-        LOG.info(String.format("Result of %d addition calls: %s", tests, additionSummary)) ;
+        LOG.info(String.format("Result of %d addition calls: %s", tests, formatSummary((additionSummary)))) ;
         TimerGroup.Summary concatenationSummary = client.testConcatenationPerformance(10000, 500) ;
-        LOG.info(String.format("Result of %d concatenation calls with %d character strings: %s", tests, characters, concatenationSummary)) ;
+        LOG.info(String.format("Result of %d concatenation calls with %d character strings: %s", tests, characters, formatSummary(concatenationSummary))) ;
+    }
+
+    static String formatSummary(TimerGroup.Summary summary) {
+        return String.format("Summary[total=%dms count=%d min=%dus max=%dus avg=%dus",
+            summary.total / 1000 / 1000,
+            summary.count,
+            summary.min / 1000,
+            summary.max / 1000,
+            summary.total / summary.count / 1000
+        ) ;
     }
 
     public static void main(String[] args) {

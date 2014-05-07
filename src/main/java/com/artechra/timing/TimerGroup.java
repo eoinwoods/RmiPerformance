@@ -1,10 +1,12 @@
 package com.artechra.timing;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class TimerGroup {
 
-    private static final String UNIT_INDICATOR = "us" ;
+    private static final String UNIT_INDICATOR = "ns" ;
 
     private final HashMap<String, Timer> timers = new HashMap<>() ;
 
@@ -14,22 +16,20 @@ public class TimerGroup {
         public final long min ;
         public final long max ;
         public final long avg ;
-        public final String unitIndicator ;
-        public Summary(long total, long count, long min, long max, long avg, String unitIndicator) {
+        public Summary(long total, long count, long min, long max, long avg) {
             this.total = total ;
             this.count = count ;
             this.min = min ;
             this.max = max ;
             this.avg = avg ;
-            this.unitIndicator = unitIndicator ;
         }
         public String toString() {
             return String.format("Summary[total=%d%s count=%d min=%d%s max=%d%s avg=%d%s]",
-                    this.total, this.unitIndicator,
+                    this.total, UNIT_INDICATOR,
                     this.count,
-                    this.min, this.unitIndicator,
-                    this.max, this.unitIndicator,
-                    this.avg, this.unitIndicator) ;
+                    this.min, UNIT_INDICATOR,
+                    this.max, UNIT_INDICATOR,
+                    this.avg, UNIT_INDICATOR) ;
         }
     }
 
@@ -53,7 +53,7 @@ public class TimerGroup {
         long total = 0 ;
         long count =  0;
         for (Timer t : timers.values()) {
-            long duration = t.durationMillis() ;
+            long duration = t.durationNanos() ;
             if (duration < min) {
                 min = duration ;
             }
@@ -64,7 +64,15 @@ public class TimerGroup {
             count++ ;
         }
         long avg = (count == 0 ? 0 : total/count) ;
-        return new Summary(total, count, min, max, avg, UNIT_INDICATOR) ;
+        return new Summary(total, count, min, max, avg) ;
+    }
+
+    public List<Long> getValues() {
+        List<Long> values = new ArrayList<Long>() ;
+        for (Timer t : timers.values()) {
+            values.add(t.durationNanos()) ;
+        }
+        return values ;
     }
 
     protected Timer createTimer() {

@@ -5,6 +5,12 @@ public class Timer {
     private long start = 0;
     private long end = 0 ;
 
+    public static Timer newRunningTimer() {
+        Timer ret = new Timer() ;
+        ret.start() ;
+        return ret ;
+    }
+
     public void start() {
         this.start = System.nanoTime() ;
     }
@@ -18,10 +24,6 @@ public class Timer {
         checkStarted();
         checkEnded();
         return this.end - this.start;
-    }
-
-    public long durationMillis() {
-        return durationNanos() / 1000 / 1000 ;
     }
 
     private void checkStarted() {

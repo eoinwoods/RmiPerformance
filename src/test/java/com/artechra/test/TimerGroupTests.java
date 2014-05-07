@@ -4,6 +4,8 @@ import com.artechra.timing.Timer;
 import com.artechra.timing.TimerGroup;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static com.artechra.test.Assertions.assertEqualsWithinTolerance;
 import static com.artechra.test.Matchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -50,7 +52,7 @@ public class TimerGroupTests {
         tg.startTimer("one");
         tg.stopTimer("one") ;
         TimerGroup.Summary s = tg.getSummaryStats() ;
-        assertThat(s, is(equalTo(new TimerGroup.Summary(10l, 1l, 10l, 10l, 10l, "")))) ;
+        assertThat(s, is(equalTo(new TimerGroup.Summary(10l, 1l, 10l, 10l, 10l)))) ;
     }
 
     @Test
@@ -63,7 +65,7 @@ public class TimerGroupTests {
         tg.startTimer("three");
         tg.stopTimer("three") ;
         TimerGroup.Summary s = tg.getSummaryStats() ;
-        assertThat(s, is(equalTo(new TimerGroup.Summary(33l, 3l, 10l, 12l, 11l, "")))) ;
+        assertThat(s, is(equalTo(new TimerGroup.Summary(33l, 3l, 10l, 12l, 11l)))) ;
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -71,4 +73,18 @@ public class TimerGroupTests {
         TimerGroup tg = new TimerGroup() ;
         tg.stopTimer("no-such-timer");
     }
+
+    @Test
+    public void retrievingTheValueSetMustReturnTheListOfTimerLengths() {
+        FixedTimerGroup tg = new FixedTimerGroup() ;
+        tg.startTimer("one");
+        tg.stopTimer("one");
+        tg.startTimer("two");
+        tg.stopTimer("two");
+        tg.startTimer("three");
+        tg.stopTimer("three");
+        assertThat(tg.getValues(), equalTo(Arrays.asList(10l, 11l, 12l)));
+    }
+
+
 }
