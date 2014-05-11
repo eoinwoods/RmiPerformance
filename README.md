@@ -30,7 +30,7 @@ So what were the results?  Well, briefly, using Amazon EC2 instances to test RMI
 * 10,000 concatenation calls take 6000 msec over JRMP and 8000 msec over SSL
 * Service lookup took about 350 msec over JRMP and 2000 msec over SSL
 
-These are averaged results over three runs.
+These are averaged results over three runs.  Ping time between EC2 instances is about 0.5 msec.
 
 What I look away from this was that SSL does add a definite overhead, in some cases almost doubling the time taken to make a simple RMI call.  If you make a very large number of RMI calls on critical transaction paths, this needs to be taken into account.  On the other hand, all the simple JRMP calls take (broadly) 500 microseconds and doubling this is still only a millisecond.  So unless your services are very fast, this is unlikely to be the most pressing problem you have.
 
